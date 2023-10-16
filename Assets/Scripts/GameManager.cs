@@ -74,16 +74,11 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
-        UpdateDisposableObjects();
-        this.WorldChanged = false;
-        this.Character = GameObject.FindGameObjectWithTag("Player").GetComponent<AutonomousCharacter>();
-
-        this.initialPosition = this.Character.gameObject.transform.position;
+        StartGame();
 
 
         //To use line make orc 3,4 using formation = true, 5 is anchor, get rid of nav mach to 1000y
-        if (UseFormationLine)
+        /*if (UseFormationLine)
         {
             try
             {
@@ -162,8 +157,21 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Normal Dungeon, Formations off");
                 this.Formations = null;
             }
-        }
+        }*/
 
+    }
+
+    public void StartGame()
+    {
+        Instance = this;
+        UpdateDisposableObjects();
+        this.WorldChanged = false;
+        this.Character = GameObject.FindGameObjectWithTag("Player").GetComponent<AutonomousCharacter>();
+        this.Character.StartCharacter();
+
+        this.initialPosition = this.Character.gameObject.transform.position;
+
+        this.gameEnded = false;
     }
 
     public void UpdateDisposableObjects()
@@ -221,7 +229,7 @@ public class GameManager : MonoBehaviour
     {
         if (!this.gameEnded)
         {
-
+            
             if (Time.time > this.nextUpdateTime)
             {
                 this.nextUpdateTime = Time.time + GameConstants.UPDATE_INTERVAL;
@@ -260,6 +268,10 @@ public class GameManager : MonoBehaviour
                         fm.UpdateSlots();
                 }
             }
+        }
+        else
+        {
+            StartGame();
         }
     }
 
@@ -304,9 +316,8 @@ public class GameManager : MonoBehaviour
                     }
                     //there was an hit, enemy is destroyed, gain xp
                     this.enemies.Remove(enemy);
-                    this.disposableObjects[enemy.name].Remove(enemy);
+                    this.disposableObjects.Remove(enemy.name);
                     enemy.SetActive(false);
-                    Object.Destroy(enemy);
                 }
             }
             else
@@ -321,9 +332,8 @@ public class GameManager : MonoBehaviour
                 }
                 damage = enemyData.SimpleDamage;
                 this.enemies.Remove(enemy);
-                this.disposableObjects[enemy.name].Remove(enemy);
+                this.disposableObjects.Remove(enemy.name);
                 enemy.SetActive(false);
-                Object.Destroy(enemy);
             }
 
             this.Character.baseStats.XP += enemyData.XPvalue;
@@ -387,7 +397,6 @@ public class GameManager : MonoBehaviour
                         this.enemies.Remove(enemy);
                         this.disposableObjects.Remove(enemy.name);
                         enemy.SetActive(false);
-                        Object.Destroy(enemy);
                     }
                 }
                 else
@@ -404,7 +413,6 @@ public class GameManager : MonoBehaviour
                     this.enemies.Remove(enemy);
                     this.disposableObjects.Remove(enemy.name);
                     enemy.SetActive(false);
-                    Object.Destroy(enemy);
                 }
 
                 this.Character.baseStats.XP += monster.enemyStats.XPvalue;
@@ -434,9 +442,8 @@ public class GameManager : MonoBehaviour
                 this.Character.baseStats.XP += 3;
                 this.Character.AddToDiary(" I Smited " + enemy.name);
                 this.enemies.Remove(enemy);
-                this.disposableObjects[enemy.name].Remove(enemy);
+                this.disposableObjects.Remove(enemy.name);
                 enemy.SetActive(false);
-                Object.Destroy(enemy);
             }
             this.Character.baseStats.Mana -= 2;
 
@@ -467,8 +474,8 @@ public class GameManager : MonoBehaviour
         {
             this.Character.AddToDiary(" I opened  " + chest.name);
             this.chests.Remove(chest);
-            this.disposableObjects[chest.name].Remove(chest);
-            Object.Destroy(chest);
+            this.disposableObjects.Remove(chest.name);
+            chest.SetActive(false);
             this.Character.baseStats.Money += 5;
             this.WorldChanged = true;
             if(Open != null) Open.Play();
@@ -481,8 +488,8 @@ public class GameManager : MonoBehaviour
         if (manaPotion != null && manaPotion.activeSelf && InPotionRange(manaPotion))
         {
             this.Character.AddToDiary(" I drank " + manaPotion.name);
-            this.disposableObjects[manaPotion.name].Remove(manaPotion);
-            Object.Destroy(manaPotion);
+            this.disposableObjects.Remove(manaPotion.name);
+            manaPotion.SetActive(false);
             this.Character.baseStats.Mana = 10;
             this.WorldChanged = true;
             if(Drink != null) Drink.Play();
@@ -494,8 +501,8 @@ public class GameManager : MonoBehaviour
         if (potion != null && potion.activeSelf && InPotionRange(potion))
         {
             this.Character.AddToDiary(" I drank " + potion.name);
-            this.disposableObjects[potion.name].Remove(potion);
-            Object.Destroy(potion);
+            this.disposableObjects.Remove(potion.name);
+            potion.SetActive(false);
             this.Character.baseStats.HP = this.Character.baseStats.MaxHP;
             this.WorldChanged = true;
             if(Drink == null) Drink.Play();
@@ -549,7 +556,6 @@ public class GameManager : MonoBehaviour
                 this.Character.AddToDiary(" I used the Divine Wrath and all monsters were killed! \nSo ends a day's work...");
                 enemy.SetActive(false);
                 this.disposableObjects.Remove(enemy.name);
-                Object.Destroy(enemy);
             }
 
             enemies.Clear();

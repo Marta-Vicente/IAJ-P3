@@ -95,6 +95,11 @@ public class AutonomousCharacter : NPC
 
     public void Start()
     {
+        StartCharacter();
+    }
+
+    public void StartCharacter()
+    {
         //This is the actual speed of the agent
         lineRenderer = this.GetComponent<LineRenderer>();
         playerText.text = "";
@@ -152,7 +157,7 @@ public class AutonomousCharacter : NPC
         this.Actions = new List<Action>();
 
         //First it is necessary to add the actions made available by the elements in the scene
-        
+
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Skeleton"))
         {
             this.Actions.Add(new SwordAttack(this, enemy));
@@ -163,7 +168,7 @@ public class AutonomousCharacter : NPC
         {
             this.Actions.Add(new SwordAttack(this, enemy));
         }
-        
+
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Dragon"))
         {
             this.Actions.Add(new SwordAttack(this, enemy));
@@ -183,7 +188,7 @@ public class AutonomousCharacter : NPC
         {
             this.Actions.Add(new GetManaPotion(this, potion));
         }
-        
+
 
         //Then we have a series of extra actions available to Sir Uthgard
         this.Actions.Add(new LevelUp(this));
@@ -193,7 +198,7 @@ public class AutonomousCharacter : NPC
 
         // Initialization of Decision Making Algorithms
         if (!this.controlledByPlayer)
-        { 
+        {
             if (this.GOBActive) this.GOBDecisionMaking = new GOBDecisionMaking(this.Actions, this.Goals);
             else if (this.GOAPActive)
             {
@@ -216,7 +221,7 @@ public class AutonomousCharacter : NPC
                 var worldModel = new CurrentStateWorldModel(GameManager.Instance, this.Actions, this.Goals);
                 this.GOAPFEARDecisionMaking = new DepthLimitedGOAPDecisionMakingFEAR(worldModel, this.Actions, this.Goals);
             }
-            else if(this.MTCSLimitedPlayoutActive)
+            else if (this.MTCSLimitedPlayoutActive)
             {
                 var worldModel = new CurrentStateWorldModel(GameManager.Instance, this.Actions, this.Goals);
                 this.MCTSLimitedPlayout = new MCTSLimitedPlayout(worldModel);
@@ -225,6 +230,7 @@ public class AutonomousCharacter : NPC
 
         this.initialPositon = gameObject.transform.position;
 
+        DiaryText.text = "";
         DiaryText.text += "My Diary \n I awoke, AND I CHOOSE F@CK#NG VIOLENCE TODAY. What a wonderful day to kill Monsters! \n";
     }
 
