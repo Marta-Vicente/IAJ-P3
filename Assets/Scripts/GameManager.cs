@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     public Text LevelText;
     public Text MoneyText;
     public Text DiaryText;
+    public Text WinsText;
     public GameObject GameEnd;
 
     [Header("Enemy Settings")]
@@ -181,7 +182,8 @@ public class GameManager : MonoBehaviour
         {
             if (res) winCount++;
         }
-        Debug.Log("Restart: " + winCount + "/" + Wins.Count);
+
+        WinsText.text = "Win Rate: " + GetCurrentScore();
     }
 
     public void UpdateDisposableObjects()
@@ -637,6 +639,17 @@ public class GameManager : MonoBehaviour
     public bool InPotionRange(GameObject potion)
     {
         return this.CheckRange(potion, GameConstants.PICKUP_RANGE);
+    }
+
+    public static string GetCurrentScore()
+    {
+        var winCount = 0;
+        foreach (bool res in Wins)
+        {
+            if (res) winCount++;
+        }
+
+        return winCount.ToString() + "/" + Wins.Count;
     }
 
 }
