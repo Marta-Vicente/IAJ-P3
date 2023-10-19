@@ -47,7 +47,7 @@ namespace Assets.Scripts.Game
             this.baseStats.ShieldHP = 0;
             this.baseStats.Mana = 0;
             this.baseStats.XP = 0;
-            this.baseStats.Time = 150;
+            this.baseStats.Time = 0;
             this.baseStats.Money = 0;
             this.baseStats.Level = 1;
 

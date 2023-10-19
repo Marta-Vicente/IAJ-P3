@@ -263,7 +263,6 @@ public class GameManager : MonoBehaviour
                 this.GameEnd.SetActive(true);
                 this.gameEnded = true;
                 //Debug.Log(Character.MaxIterations);
-                Debug.Log("Entrada 1");
                 SimulatedStartGame();
                 this.GameEnd.GetComponentInChildren<Text>().text = "You Died";
             }
@@ -272,7 +271,6 @@ public class GameManager : MonoBehaviour
                 this.GameEnd.SetActive(true);
                 this.gameEnded = true;
                 //Debug.Log(Character.MaxIterations);
-                Debug.Log("Entrada 2");
                 SimulatedStartGame();
                 this.GameEnd.GetComponentInChildren<Text>().text = "Victory \n GG EZ";
             }
@@ -289,7 +287,6 @@ public class GameManager : MonoBehaviour
         else
         {
             SimulatedStartGame();
-            Debug.Log("Entrada 3");
         }
     }
 
