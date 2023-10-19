@@ -231,11 +231,6 @@ public class AutonomousCharacter : NPC
             }
         }
 
-        if(firstStart)
-            this.initialPositon = gameObject.transform.position;
-
-        gameObject.transform.position = this.initialPositon;
-
         DiaryText.text += "My Diary \n I awoke, AND I CHOOSE F@CK#NG VIOLENCE TODAY. What a wonderful day to kill Monsters! \n";
     }
 
