@@ -529,9 +529,13 @@ public class AutonomousCharacter : NPC
             if (this.CurrentAction == null)
             {
                 var action = this.MCTSDecisionMaking.ChooseAction();
-                this.CurrentAction = action;
-                AddToDiary(" I decided to " + action.Name);
-                MaxIterations++;
+                if(action != null)
+                {
+                    this.CurrentAction = action;
+                    AddToDiary(" I decided to " + action.Name);
+                    MaxIterations++;
+                }
+
             }
         }
 

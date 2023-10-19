@@ -54,7 +54,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             this.InProgress = false;
             this.CurrentStateWorldModel = currentStateWorldModel;
             this.MaxIterations = 500;
-            this.MaxPlayoutsPerNode = 1000;
+            this.MaxPlayoutsPerNode = 10;
             this.MaxIterationsPerFrame = 100;
             this.RandomGenerator = new System.Random();
             this.InitialState = currentStateWorldModel;
