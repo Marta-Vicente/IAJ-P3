@@ -7,6 +7,7 @@ using Assets.Scripts.Game.NPCs;
 using Assets.Scripts.IAJ.Unity.Formations;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.BehaviourTrees;
 using static UnityEngine.GraphicsBuffer;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -71,12 +72,12 @@ public class GameManager : MonoBehaviour
 
     public bool UseFormationLine;
     public bool UseFormationTri;
-    public bool FirstStart = true;
+
+    public static List<bool> Wins = new List<bool>();
 
     void Awake()
     {
         StartGame();
-        FirstStart = false;
 
 
         //To use line make orc 3,4 using formation = true, 5 is anchor, get rid of nav mach to 1000y
@@ -165,25 +166,22 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        //if (FirstStart)
-            Instance = this;
-        //else
-            //Instance = new GameManager();
-
+        Instance = this;
         UpdateDisposableObjects();
-
         this.WorldChanged = false;
-        if (!FirstStart)
-        {
-            this.Character.ResetCharacter();
-            this.Character.StartCharacter();
-        }
         this.Character = GameObject.FindGameObjectWithTag("Player").GetComponent<AutonomousCharacter>();
+        this.Character.StartCharacter();
 
         this.initialPosition = this.Character.gameObject.transform.position;
 
         this.gameEnded = false;
-        this.GameEnd.SetActive(false);
+
+        var winCount = 0;
+        foreach (bool res in Wins)
+        {
+            if (res) winCount++;
+        }
+        Debug.Log("Restart: " + winCount + "/" + Wins.Count);
     }
 
     public void UpdateDisposableObjects()
@@ -198,7 +196,7 @@ public class GameManager : MonoBehaviour
         this.enemies.AddRange(this.orcs);
         this.enemies.AddRange(this.dragons);
 
-     
+
         //adds all enemies to the disposable objects collection
         foreach (var enemy in this.enemies)
         {
@@ -241,7 +239,7 @@ public class GameManager : MonoBehaviour
     {
         if (!this.gameEnded)
         {
-            
+
             if (Time.time > this.nextUpdateTime)
             {
                 this.nextUpdateTime = Time.time + GameConstants.UPDATE_INTERVAL;
@@ -261,17 +259,17 @@ public class GameManager : MonoBehaviour
             {
                 this.GameEnd.SetActive(true);
                 this.gameEnded = true;
-                //Debug.Log(Character.MaxIterations);
-                StartGame();
                 this.GameEnd.GetComponentInChildren<Text>().text = "You Died";
+
+                Wins.Add(false);
             }
             else if (this.Character.baseStats.Money >= 25)
             {
                 this.GameEnd.SetActive(true);
                 this.gameEnded = true;
-                //Debug.Log(Character.MaxIterations);
-                StartGame();
                 this.GameEnd.GetComponentInChildren<Text>().text = "Victory \n GG EZ";
+
+                Wins.Add(true);
             }
 
             if (Formations != null)
@@ -285,7 +283,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            StartGame();
+            //StartGame();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -476,8 +475,8 @@ public class GameManager : MonoBehaviour
             this.Character.AddToDiary(" My Shield of Faith will protect me!");
             this.WorldChanged = true;
 
-            if(this.Shield != null) Shield.Play();
-            
+            if (this.Shield != null) Shield.Play();
+
         }
     }
 
@@ -492,7 +491,7 @@ public class GameManager : MonoBehaviour
             chest.SetActive(false);
             this.Character.baseStats.Money += 5;
             this.WorldChanged = true;
-            if(Open != null) Open.Play();
+            if (Open != null) Open.Play();
         }
     }
 
@@ -506,7 +505,7 @@ public class GameManager : MonoBehaviour
             manaPotion.SetActive(false);
             this.Character.baseStats.Mana = 10;
             this.WorldChanged = true;
-            if(Drink != null) Drink.Play();
+            if (Drink != null) Drink.Play();
         }
     }
 
@@ -519,7 +518,7 @@ public class GameManager : MonoBehaviour
             potion.SetActive(false);
             this.Character.baseStats.HP = this.Character.baseStats.MaxHP;
             this.WorldChanged = true;
-            if(Drink == null) Drink.Play();
+            if (Drink == null) Drink.Play();
         }
     }
 
@@ -536,7 +535,7 @@ public class GameManager : MonoBehaviour
                 this.Character.StopTime = Time.time + AutonomousCharacter.LEVELING_INTERVAL;
             }
             else if (this.Character.StopTime < Time.time)
-            { 
+            {
                 this.Character.baseStats.Level++;
                 this.Character.baseStats.MaxHP += 10;
                 this.Character.baseStats.XP = 0;
@@ -606,7 +605,7 @@ public class GameManager : MonoBehaviour
             this.Character.transform.position = this.initialPosition;
             this.Character.baseStats.Mana -= 5;
             this.WorldChanged = true;
-            if (Flash != null) Flash.Play();    
+            if (Flash != null) Flash.Play();
         }
 
     }
