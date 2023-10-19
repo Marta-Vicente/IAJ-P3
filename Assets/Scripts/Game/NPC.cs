@@ -41,6 +41,18 @@ namespace Assets.Scripts.Game
             navMeshAgent = this.GetComponent<NavMeshAgent>();
         }
 
+        public virtual void ResetCharacter()
+        {
+            this.baseStats.HP = this.baseStats.MaxHP;
+            this.baseStats.ShieldHP = 0;
+            this.baseStats.Mana = 0;
+            this.baseStats.XP = 0;
+            this.baseStats.Time = 150;
+            this.baseStats.Money = 0;
+            this.baseStats.Level = 1;
+
+        }
+
 
 
         #region Navmesh Pathfinding Methods

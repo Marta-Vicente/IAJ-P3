@@ -230,8 +230,13 @@ public class AutonomousCharacter : NPC
 
         this.initialPositon = gameObject.transform.position;
 
-        DiaryText.text = "";
         DiaryText.text += "My Diary \n I awoke, AND I CHOOSE F@CK#NG VIOLENCE TODAY. What a wonderful day to kill Monsters! \n";
+    }
+
+    public override void ResetCharacter()
+    {
+        base.ResetCharacter();
+        DiaryText.text = "";
     }
 
     void FixedUpdate()
@@ -852,5 +857,6 @@ public class AutonomousCharacter : NPC
 
         return x;
     }
+
 
 }

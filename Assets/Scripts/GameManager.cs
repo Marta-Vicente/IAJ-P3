@@ -167,11 +167,24 @@ public class GameManager : MonoBehaviour
         UpdateDisposableObjects();
         this.WorldChanged = false;
         this.Character = GameObject.FindGameObjectWithTag("Player").GetComponent<AutonomousCharacter>();
-        this.Character.StartCharacter();
+        //this.Character.ResetCharacter();
 
         this.initialPosition = this.Character.gameObject.transform.position;
 
         this.gameEnded = false;
+        this.GameEnd.SetActive(false);
+    }
+
+    public void InitialStartGame()
+    {
+        StartGame();
+    }
+
+    public void SimulatedStartGame()
+    {
+        this.Character.ResetCharacter();
+        this.Character.StartCharacter();
+        StartGame();
     }
 
     public void UpdateDisposableObjects()
@@ -249,14 +262,18 @@ public class GameManager : MonoBehaviour
             {
                 this.GameEnd.SetActive(true);
                 this.gameEnded = true;
-                Debug.Log(Character.MaxIterations);
+                //Debug.Log(Character.MaxIterations);
+                Debug.Log("Entrada 1");
+                SimulatedStartGame();
                 this.GameEnd.GetComponentInChildren<Text>().text = "You Died";
             }
             else if (this.Character.baseStats.Money >= 25)
             {
                 this.GameEnd.SetActive(true);
                 this.gameEnded = true;
-                Debug.Log(Character.MaxIterations);
+                //Debug.Log(Character.MaxIterations);
+                Debug.Log("Entrada 2");
+                SimulatedStartGame();
                 this.GameEnd.GetComponentInChildren<Text>().text = "Victory \n GG EZ";
             }
 
@@ -271,7 +288,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            StartGame();
+            SimulatedStartGame();
+            Debug.Log("Entrada 3");
         }
     }
 
