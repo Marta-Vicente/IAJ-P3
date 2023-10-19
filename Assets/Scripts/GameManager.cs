@@ -71,10 +71,12 @@ public class GameManager : MonoBehaviour
 
     public bool UseFormationLine;
     public bool UseFormationTri;
+    public bool FirstStart = true;
 
     void Awake()
     {
         StartGame();
+        FirstStart = false;
 
 
         //To use line make orc 3,4 using formation = true, 5 is anchor, get rid of nav mach to 1000y
@@ -163,28 +165,25 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        Instance = this;
+        //if (FirstStart)
+            Instance = this;
+        //else
+            //Instance = new GameManager();
+
         UpdateDisposableObjects();
+
         this.WorldChanged = false;
+        if (!FirstStart)
+        {
+            this.Character.ResetCharacter();
+            this.Character.StartCharacter();
+        }
         this.Character = GameObject.FindGameObjectWithTag("Player").GetComponent<AutonomousCharacter>();
-        //this.Character.ResetCharacter();
 
         this.initialPosition = this.Character.gameObject.transform.position;
 
         this.gameEnded = false;
         this.GameEnd.SetActive(false);
-    }
-
-    public void InitialStartGame()
-    {
-        StartGame();
-    }
-
-    public void SimulatedStartGame()
-    {
-        this.Character.ResetCharacter();
-        this.Character.StartCharacter();
-        StartGame();
     }
 
     public void UpdateDisposableObjects()
@@ -263,7 +262,7 @@ public class GameManager : MonoBehaviour
                 this.GameEnd.SetActive(true);
                 this.gameEnded = true;
                 //Debug.Log(Character.MaxIterations);
-                SimulatedStartGame();
+                StartGame();
                 this.GameEnd.GetComponentInChildren<Text>().text = "You Died";
             }
             else if (this.Character.baseStats.Money >= 25)
@@ -271,7 +270,7 @@ public class GameManager : MonoBehaviour
                 this.GameEnd.SetActive(true);
                 this.gameEnded = true;
                 //Debug.Log(Character.MaxIterations);
-                SimulatedStartGame();
+                StartGame();
                 this.GameEnd.GetComponentInChildren<Text>().text = "Victory \n GG EZ";
             }
 
@@ -286,7 +285,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            SimulatedStartGame();
+            StartGame();
         }
     }
 
