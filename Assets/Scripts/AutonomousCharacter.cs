@@ -93,9 +93,12 @@ public class AutonomousCharacter : NPC
 
     public Vector3 initialPositon;
 
+    public bool firstStart = true;
+
     public void Start()
     {
         StartCharacter();
+        firstStart = false;
     }
 
     public void StartCharacter()
@@ -228,7 +231,10 @@ public class AutonomousCharacter : NPC
             }
         }
 
-        this.initialPositon = gameObject.transform.position;
+        if(firstStart)
+            this.initialPositon = gameObject.transform.position;
+
+        gameObject.transform.position = this.initialPositon;
 
         DiaryText.text += "My Diary \n I awoke, AND I CHOOSE F@CK#NG VIOLENCE TODAY. What a wonderful day to kill Monsters! \n";
     }
