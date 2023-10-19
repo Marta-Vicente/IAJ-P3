@@ -93,12 +93,9 @@ public class AutonomousCharacter : NPC
 
     public Vector3 initialPositon;
 
-    public bool firstStart = true;
-
     public void Start()
     {
         StartCharacter();
-        firstStart = false;
     }
 
     public void StartCharacter()
