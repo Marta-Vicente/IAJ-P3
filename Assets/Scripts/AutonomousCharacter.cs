@@ -228,6 +228,7 @@ public class AutonomousCharacter : NPC
             }
         }
 
+        DiaryText.text = "";
         DiaryText.text += "My Diary \n I awoke, AND I CHOOSE F@CK#NG VIOLENCE TODAY. What a wonderful day to kill Monsters! \n";
     }
 
@@ -413,7 +414,10 @@ public class AutonomousCharacter : NPC
 
     public void AddToDiary(string s)
     {
-        DiaryText.text += Time.time + s + "\n";
+        var time = Time.timeSinceLevelLoad;
+        if (time < 0)
+            time = 0;
+        DiaryText.text += time + s + "\n";
 
         if (DiaryText.text.Length > 600)
             DiaryText.text = DiaryText.text.Substring(500);
