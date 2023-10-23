@@ -1,6 +1,8 @@
 ﻿using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 using System.Collections.Generic;
+using System;
+using System.Numerics;
 
 namespace Assets.Scripts.Game
 {
@@ -10,7 +12,7 @@ namespace Assets.Scripts.Game
     {
         private Dictionary<string, Goal> Goals { get; set; } 
 
-        public CurrentStateWorldModel(GameManager gameManager, List<Action> actions, List<Goal> goals) : base(gameManager, actions)
+        public CurrentStateWorldModel(GameManager gameManager, List<IAJ.Unity.DecisionMaking.ForwardModel.Action> actions, List<Goal> goals) : base(gameManager, actions)
         {
             this.Parent = null;
             this.Goals = new Dictionary<string, Goal>();
@@ -76,5 +78,43 @@ namespace Assets.Scripts.Game
             //in the current state, the next player is always player 0
             return 0;
         }
+
+        
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+
+            try
+            {
+                CurrentStateWorldModel f = (CurrentStateWorldModel)obj;
+
+                if ((int)f.GetProperty(Properties.HP) != (int)this.GetProperty(Properties.HP)) return false;
+                if ((int)f.GetProperty(Properties.MANA) != (int)this.GetProperty(Properties.MANA)) return false;
+                if ((int)f.GetProperty(Properties.ShieldHP) != (int)this.GetProperty(Properties.ShieldHP)) return false;
+                if ((int)f.GetProperty(Properties.XP) != (int)this.GetProperty(Properties.XP)) return false;
+                if ((int)f.GetProperty(Properties.LEVEL) != (int)this.GetProperty(Properties.LEVEL)) return false;
+                if ((float)f.GetProperty(Properties.TIME) != (float)this.GetProperty(Properties.TIME)) return false;
+
+                float threshold = 1f;
+                float value1 = (float)f.GetProperty(Properties.TIME);
+                float value2 = (float)this.GetProperty(Properties.TIME);
+
+                if (Math.Abs(value1 - value2) > threshold)
+                {
+                    return false;
+                }
+
+
+                if ((int)f.GetProperty(Properties.MONEY) != (int)this.GetProperty(Properties.MONEY)) return false;
+                if (Vector3.Distance((Vector3)f.GetProperty(Properties.POSITION), (Vector3)this.GetProperty(Properties.POSITION)) > 1f) return false;
+                
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        
     }
 }

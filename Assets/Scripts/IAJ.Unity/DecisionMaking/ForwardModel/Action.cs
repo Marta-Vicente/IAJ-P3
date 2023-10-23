@@ -4,7 +4,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 {
     public class Action
     {
-        private static int ActionID = 0; 
+        private static int ActionID = 0;
         public string Name { get; set; }
         public int ID { get; set; }
         private Dictionary<Goal, float> GoalEffects { get; set; }
@@ -82,6 +82,20 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
         public virtual float GetHValue(WorldModel worldModel)
         {
             return 0.0f;
+        }
+
+        public override bool Equals(object obj)
+        {
+            try
+            {
+                Action A = obj as Action;
+                if(A.ID  == this.ID) return true;
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
     }
