@@ -66,17 +66,26 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
         public void ResolveAction()
         {
+            Action bestAction = qTable.GetBest(currentStateWorldModel, currentStateWorldModel.GetExecutableActions());
+
             Tuple<float, CurrentStateWorldModel> regist = qTable.FindOrAdd(lastStateWorldModel, lastAction);
-            Tuple<float, CurrentStateWorldModel> newRegist = qTable.FindOrAdd(currentStateWorldModel, 
-                            qTable.GetBest(currentStateWorldModel, currentStateWorldModel.GetExecutableActions()));
+            Tuple<float, CurrentStateWorldModel> newRegist = qTable.FindOrAdd(currentStateWorldModel, bestAction);
 
             float Q = regist.Item1;
             float MaxQ = newRegist.Item1;
-            float reward = 0f;
+            float reward = CalculateReward(currentStateWorldModel);
 
             float newQ = (1 - learningRate) * Q + learningRate * (reward + (discountRate * MaxQ));
 
             qTable.UpdateOrAdd(lastStateWorldModel, lastAction, newQ, currentStateWorldModel);
+        }
+
+        public float CalculateReward(CurrentStateWorldModel state)
+        {
+            if (!state.IsTerminal()) 
+                return 0f;
+            else
+                return state.GetScore();
         }
     }
 }

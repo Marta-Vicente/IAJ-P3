@@ -337,6 +337,7 @@ public class AutonomousCharacter : NPC
             else if(QActive)
             {
                 this.Q_Learning.currentStateWorldModel = new CurrentStateWorldModel(GameManager.Instance, this.Actions, this.Goals);
+                this.Q_Learning.ResolveAction();
             }
         }
 

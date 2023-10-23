@@ -72,7 +72,6 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
         public Action GetBest(CurrentStateWorldModel State, Action[] actions)
         {
-            Dictionary<Action, Tuple<float, CurrentStateWorldModel>> row = Table[State];
 
             Action best = null;
             float bestQ = 0f;

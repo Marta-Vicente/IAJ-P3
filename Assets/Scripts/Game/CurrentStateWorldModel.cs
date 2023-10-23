@@ -115,6 +115,22 @@ namespace Assets.Scripts.Game
                 return false;
             }
         }
-        
+
+        public override float GetScore()
+        {
+            int money = (int)this.GetProperty(Properties.MONEY);
+            int HP = (int)this.GetProperty(Properties.HP);
+            float time = (float)this.GetProperty(Properties.TIME);
+
+            // TODO : Should Time and other factors be taken into accoun?
+
+            if (HP <= 0 || time >= 150f) return -1.0f;
+            else if (money == 25)
+            {
+                return 1.0f;
+            }
+            else return 0.0f;
+        }
+
     }
 }
