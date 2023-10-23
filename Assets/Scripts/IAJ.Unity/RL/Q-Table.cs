@@ -14,21 +14,18 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
     {
 
         public Dictionary<CurrentStateWorldModel, Dictionary<Action, Tuple<float, CurrentStateWorldModel>>> Table;
-        public Action[] Actions;
 
         public Q_Table() { }
 
-        public Q_Table(CurrentStateWorldModel State, Action[] actions)
+        public Q_Table(CurrentStateWorldModel State)
         {
             InitTable();
             Table[State] = new Dictionary<Action, Tuple<float, CurrentStateWorldModel>>();
-            Actions = actions;
         }
 
-        public Q_Table(Dictionary<CurrentStateWorldModel, Dictionary<Action, Tuple<float, CurrentStateWorldModel>>> table, Action[] actions)
+        public Q_Table(Dictionary<CurrentStateWorldModel, Dictionary<Action, Tuple<float, CurrentStateWorldModel>>> table)
         {
             Table = table;
-            Actions = actions;
         }
 
         public void InitTable()

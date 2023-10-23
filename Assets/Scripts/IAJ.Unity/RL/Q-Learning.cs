@@ -13,7 +13,6 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
     public class Q_Learning
     {
         public Q_Table qTable;
-        public Action[] Actions;
         public float learningRate;
         public float discountRate;
         public float randomnessRate;
@@ -24,10 +23,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
         public CurrentStateWorldModel lastStateWorldModel;
         protected System.Random RandomGenerator { get; set; }
 
-        public Q_Learning(Action[] actions, CurrentStateWorldModel currentStateWorldModel)
+        public Q_Learning(CurrentStateWorldModel currentStateWorldModel)
         {
-            Actions = actions;
-            qTable = new Q_Table(currentStateWorldModel, actions);
+            qTable = new Q_Table(currentStateWorldModel);
             learningRate = 0.1f;
             discountRate = 0.9f;
             randomnessRate = 0.5f;
@@ -36,9 +34,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
             RandomGenerator = new System.Random();
         }
 
-        public Q_Learning(Action[] actions, Q_Table table, CurrentStateWorldModel currentStateWorldModel)
+        public Q_Learning(Q_Table table, CurrentStateWorldModel currentStateWorldModel)
         {
-            Actions = actions;
             qTable = table;
             learningRate = 0.0f;
             discountRate = 0.0f;

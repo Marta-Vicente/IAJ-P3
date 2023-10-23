@@ -9,6 +9,7 @@ using Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS;
 using Assets.Scripts.Game;
 using Assets.Scripts.Game.NPCs;
 using Assets.Scripts.IAJ.Unity.Utils;
+using Assets.Scripts.IAJ.Unity.DecisionMaking.RL;
 //using System;
 
 public class AutonomousCharacter : NPC
@@ -53,6 +54,9 @@ public class AutonomousCharacter : NPC
     public bool MTCSBiasActive;
     public bool GOAPFEARActive;
     public bool MTCSLimitedPlayoutActive;
+
+    [Header("RL Algorithm Options")]
+    public bool QActive;
  
     [Header("Character Info")]
     public bool Resting = false;
@@ -75,6 +79,8 @@ public class AutonomousCharacter : NPC
     public DepthLimitedGOAPDecisionMakingFEAR GOAPFEARDecisionMaking { get; set; }
 
     public MCTSLimitedPlayout MCTSLimitedPlayout { get; set; }
+
+    public Q_Learning Q_Learning { get; set; }
 
     public GameObject nearEnemy { get; private set; }
 
@@ -226,6 +232,11 @@ public class AutonomousCharacter : NPC
                 var worldModel = new CurrentStateWorldModel(GameManager.Instance, this.Actions, this.Goals);
                 this.MCTSLimitedPlayout = new MCTSLimitedPlayout(worldModel);
             }
+            else if(this.QActive)
+            {
+                var worldModel = new CurrentStateWorldModel(GameManager.Instance, this.Actions, this.Goals);
+                this.Q_Learning = new Q_Learning(worldModel);
+            }
         }
 
         DiaryText.text = "";
@@ -323,6 +334,10 @@ public class AutonomousCharacter : NPC
             {
                 this.MCTSLimitedPlayout.InitializeMCTSearch();
             }
+            else if(QActive)
+            {
+                this.Q_Learning.currentStateWorldModel = new CurrentStateWorldModel(GameManager.Instance, this.Actions, this.Goals);
+            }
         }
 
         if (this.controlledByPlayer)
@@ -377,6 +392,10 @@ public class AutonomousCharacter : NPC
         else if(this.MTCSLimitedPlayoutActive)
         {
             this.UpdateMCTSLimited();
+        }
+        else if(QActive)
+        {
+            this.UpdateQ();
         }
 
         if (this.CurrentAction != null)
@@ -735,6 +754,16 @@ public class AutonomousCharacter : NPC
         {
             this.BestActionSequence.text = "Best Action Sequence:\nNone";
             this.BestActionText.text = "";
+        }
+    }
+
+    void UpdateQ()
+    {
+        if (this.CurrentAction == null)
+        {
+            var action = this.Q_Learning.ChooseAction();
+            this.CurrentAction = action;
+            AddToDiary(" I decided to " + action.Name);
         }
     }
 
