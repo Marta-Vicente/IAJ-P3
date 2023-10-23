@@ -8,7 +8,7 @@ namespace Assets.Scripts.Game
 {
     public class FutureStateWorldModel : WorldModel
     {
-        protected GameManager GameManager { get; set; }
+        public GameManager GameManager { get; set; }
         protected int NextPlayer { get; set; }
         protected Action NextEnemyAction { get; set; }
         protected Action[] NextEnemyActions { get; set; }

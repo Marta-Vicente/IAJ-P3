@@ -10,75 +10,78 @@ using System.Linq;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 {
-    public class Q_Table
+    public static class Q_Table
     {
 
-        public Dictionary<CurrentStateWorldModel, Dictionary<Action, Tuple<float, CurrentStateWorldModel>>> Table;
+        public static Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>> Table = new Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>>();
 
-        public Q_Table() { }
 
-        public Q_Table(CurrentStateWorldModel State)
-        {
-            InitTable();
-            Table[State] = new Dictionary<Action, Tuple<float, CurrentStateWorldModel>>();
-        }
-
-        public Q_Table(Dictionary<CurrentStateWorldModel, Dictionary<Action, Tuple<float, CurrentStateWorldModel>>> table)
+        //Swap for change
+        /*
+        public Q_Table(Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>> table)
         {
             Table = table;
         }
+        */
 
-        public void InitTable()
+        /*
+        public static void InitTable()
         {
-            Table = new Dictionary<CurrentStateWorldModel, Dictionary<Action, Tuple<float, CurrentStateWorldModel>>>();
+            Table = new Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>>();
         }
+        */
 
-        public Tuple<float, CurrentStateWorldModel> FindOrAdd(CurrentStateWorldModel State, Action Action)
+        public static Tuple<float, WorldModel> FindOrAdd(WorldModel State, Action Action)
         {
             if (Table.ContainsKey(State))
             {
                 if (Table[State].ContainsKey(Action)) return Table[State][Action];
                 else
                 {
-                    Table[State].Add(Action, new Tuple<float, CurrentStateWorldModel>(0f, null));
+                    Table[State].Add(Action, new Tuple<float, WorldModel>(0f, null));
                     return Table[State][Action];
                 }
             }
             else
             {
-                Table.Add(State,new Dictionary<Action, Tuple<float, CurrentStateWorldModel>>());
-                return FindOrAdd(State, Action);
+                Table.Add(State,new Dictionary<Action, Tuple<float, WorldModel>>());
+                if (Table[State].ContainsKey(Action)) return Table[State][Action];
+                else
+                {
+                    Table[State].Add(Action, new Tuple<float, WorldModel>(0f, null));
+                    return Table[State][Action];
+                }
             }
         }
 
-        public void UpdateOrAdd(CurrentStateWorldModel State, Action Action, float Q, CurrentStateWorldModel newState)
+        public static void UpdateOrAdd(WorldModel State, Action Action, float Q, WorldModel newState)
         {
             if (Table.ContainsKey(State))
             {
                 if (Table[State].ContainsKey(Action)) 
-                    Table[State][Action] = new Tuple<float, CurrentStateWorldModel>(Q, newState);
+                    Table[State][Action] = new Tuple<float, WorldModel>(Q, newState);
                 else
                 {
-                    Table[State].Add(Action, new Tuple<float, CurrentStateWorldModel>(Q, newState));
+                    Table[State].Add(Action, new Tuple<float, WorldModel>(Q, newState));
                 }
             }
             else
             {
-                Table.Add(State, new Dictionary<Action, Tuple<float, CurrentStateWorldModel>>());
-                Table[State].Add(Action, new Tuple<float, CurrentStateWorldModel>(Q, newState));
+                Table.Add(State, new Dictionary<Action, Tuple<float, WorldModel>>());
+                Table[State].Add(Action, new Tuple<float, WorldModel>(Q, newState));
             }
         }
 
 
-        public Action GetBest(CurrentStateWorldModel State, Action[] actions)
+        public static Action GetBest(WorldModel State, Action[] actions)
         {
 
             Action best = null;
-            float bestQ = 0f;
+            float bestQ = float.MinValue;
 
             foreach (var action in actions)
             {
-                Tuple<float, CurrentStateWorldModel> t = this.FindOrAdd(State, action);
+                Tuple<float, WorldModel> t = FindOrAdd(State, action);
                 if (t.Item1 >= bestQ)
                 {
                     bestQ = t.Item1;

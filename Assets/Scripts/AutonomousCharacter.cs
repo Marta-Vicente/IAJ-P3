@@ -21,7 +21,7 @@ public class AutonomousCharacter : NPC
     public const string BE_QUICK_GOAL = "BeQuick";
     public const string GET_RICH_GOAL = "GetRich";
 
-    public const float DECISION_MAKING_INTERVAL = 40.0f; //here20.0f;
+    public const float DECISION_MAKING_INTERVAL = 100f; //here20.0f;
     public const float RESTING_INTERVAL = 5.0f;
     public const float LEVELING_INTERVAL = 10.0f;
     public const float ENEMY_NEAR_CHECK_INTERVAL = 0.5f;
@@ -251,7 +251,16 @@ public class AutonomousCharacter : NPC
 
     void FixedUpdate()
     {
-        if (GameManager.Instance.gameEnded) return;
+        if (GameManager.Instance.gameEnded)
+        {
+            if (QActive)
+            {
+                this.Q_Learning.ResolveAction();
+                this.Q_Learning.currentStateWorldModel = null;
+                Debug.Log("LAST FEITO");
+            }
+            return;
+        }
 
         //Agent Perception 
         if (Time.time > this.lastEnemyCheckTime + ENEMY_NEAR_CHECK_INTERVAL) 

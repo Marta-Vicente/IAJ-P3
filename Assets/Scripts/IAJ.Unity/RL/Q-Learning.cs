@@ -12,7 +12,6 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 {
     public class Q_Learning
     {
-        public Q_Table qTable;
         public float learningRate;
         public float discountRate;
         public float randomnessRate;
@@ -20,12 +19,11 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
         public CurrentStateWorldModel currentStateWorldModel;
 
         public Action lastAction;
-        public CurrentStateWorldModel lastStateWorldModel;
+        public WorldModel lastStateWorldModel;
         protected System.Random RandomGenerator { get; set; }
 
         public Q_Learning(CurrentStateWorldModel currentStateWorldModel)
         {
-            qTable = new Q_Table(currentStateWorldModel);
             learningRate = 0.1f;
             discountRate = 0.9f;
             randomnessRate = 0.5f;
@@ -34,6 +32,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
             RandomGenerator = new System.Random();
         }
 
+        /*
         public Q_Learning(Q_Table table, CurrentStateWorldModel currentStateWorldModel)
         {
             qTable = table;
@@ -44,11 +43,16 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
             this.currentStateWorldModel = currentStateWorldModel;
             RandomGenerator = new System.Random();
         }
+        */
 
         public Action ChooseAction()
         {
+
             Action[] currentActions = currentStateWorldModel.GetExecutableActions();
             Action action = null;
+
+            WorldModel wm = new WorldModel(currentStateWorldModel.Actions);
+            wm.SetAllProperties(currentStateWorldModel.GameManager);
 
             if(RandomGenerator.Next(100)/100 < randomnessRate)
             {
@@ -56,20 +60,24 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
             }
             else
             {
-                action = qTable.GetBest(currentStateWorldModel, currentActions);
+                action = Q_Table.GetBest(wm, currentActions);
             }
 
             lastAction = action;
-            lastStateWorldModel = currentStateWorldModel;
+            lastStateWorldModel = wm;
             return action;
         }
 
         public void ResolveAction()
         {
-            Action bestAction = qTable.GetBest(currentStateWorldModel, currentStateWorldModel.GetExecutableActions());
+            if (currentStateWorldModel != null) return;
+            WorldModel WmNew = new WorldModel(currentStateWorldModel.Actions);
+            WmNew.SetAllProperties(currentStateWorldModel.GameManager);
 
-            Tuple<float, CurrentStateWorldModel> regist = qTable.FindOrAdd(lastStateWorldModel, lastAction);
-            Tuple<float, CurrentStateWorldModel> newRegist = qTable.FindOrAdd(currentStateWorldModel, bestAction);
+            Action bestAction = Q_Table.GetBest(WmNew, currentStateWorldModel.GetExecutableActions());
+
+            Tuple<float, WorldModel> regist = Q_Table.FindOrAdd(lastStateWorldModel, lastAction);
+            Tuple<float, WorldModel> newRegist = Q_Table.FindOrAdd(WmNew, bestAction);
 
             float Q = regist.Item1;
             float MaxQ = newRegist.Item1;
@@ -77,10 +85,10 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
             float newQ = (1 - learningRate) * Q + learningRate * (reward + (discountRate * MaxQ));
 
-            qTable.UpdateOrAdd(lastStateWorldModel, lastAction, newQ, currentStateWorldModel);
+            Q_Table.UpdateOrAdd(lastStateWorldModel, lastAction, newQ, currentStateWorldModel);
         }
 
-        public float CalculateReward(CurrentStateWorldModel state)
+        public float CalculateReward(WorldModel state)
         {
             if (!state.IsTerminal()) 
                 return 0f;

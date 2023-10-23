@@ -28,6 +28,7 @@ namespace Assets.Scripts.Game
             this.ActionEnumerator.Reset();
         }
 
+        
         public override object GetProperty(string propertyName)
         {
 
@@ -58,6 +59,7 @@ namespace Assets.Scripts.Game
             return this.GameManager.disposableObjects.ContainsKey(propertyName);
         }
 
+
         public override float GetGoalValue(string goalName)
         {
             return this.Goals[goalName].InsistenceValue;
@@ -68,6 +70,7 @@ namespace Assets.Scripts.Game
             //this method does nothing, because you should not directly set a goal value of the CurrentStateWorldModel
         }
 
+        
         public override void SetProperty(string propertyName, object value)
         {
             //this method does nothing, because you should not directly set a property of the CurrentStateWorldModel
@@ -121,8 +124,6 @@ namespace Assets.Scripts.Game
             int money = (int)this.GetProperty(Properties.MONEY);
             int HP = (int)this.GetProperty(Properties.HP);
             float time = (float)this.GetProperty(Properties.TIME);
-
-            // TODO : Should Time and other factors be taken into accoun?
 
             if (HP <= 0 || time >= 150f) return -1.0f;
             else if (money == 25)
