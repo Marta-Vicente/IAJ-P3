@@ -13,7 +13,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
     public static class Q_Table
     {
 
-        public static Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>> Table = new Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>>();
+        public static Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>> Table 
+            = new Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>>(new Q_Dictionary_Equals());
 
 
         //Swap for change
@@ -33,6 +34,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
         public static Tuple<float, WorldModel> FindOrAdd(WorldModel State, Action Action)
         {
+            if (State == null || Action == null) return null;
             if (Table.ContainsKey(State))
             {
                 if (Table[State].ContainsKey(Action)) return Table[State][Action];
@@ -44,7 +46,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
             }
             else
             {
-                Table.Add(State,new Dictionary<Action, Tuple<float, WorldModel>>());
+                Table.Add(State,new Dictionary<Action, Tuple<float, WorldModel>>(new Q_Dictionary_Equals_Actions()));
                 if (Table[State].ContainsKey(Action)) return Table[State][Action];
                 else
                 {
@@ -56,6 +58,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
         public static void UpdateOrAdd(WorldModel State, Action Action, float Q, WorldModel newState)
         {
+            if(State == null || Action == null) return;
             if (Table.ContainsKey(State))
             {
                 if (Table[State].ContainsKey(Action)) 
@@ -67,7 +70,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
             }
             else
             {
-                Table.Add(State, new Dictionary<Action, Tuple<float, WorldModel>>());
+                Table.Add(State, new Dictionary<Action, Tuple<float, WorldModel>>(new Q_Dictionary_Equals_Actions()));
                 Table[State].Add(Action, new Tuple<float, WorldModel>(Q, newState));
             }
         }
@@ -75,7 +78,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
         public static Action GetBest(WorldModel State, Action[] actions)
         {
-
+            if(actions == null) return null;
             Action best = null;
             float bestQ = float.MinValue;
 
@@ -92,6 +95,11 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
             return best;
         }
 
+
+        public static Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>> ShowInDegug()
+        {
+            return Table;
+        }
 
 
     }

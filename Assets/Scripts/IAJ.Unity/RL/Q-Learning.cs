@@ -24,9 +24,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
         public Q_Learning(CurrentStateWorldModel currentStateWorldModel)
         {
-            learningRate = 0.1f;
+            learningRate = 0.5f;
             discountRate = 0.9f;
-            randomnessRate = 0.5f;
+            randomnessRate = 0.0f;
             lenghOfWalk = 0;
             this.currentStateWorldModel = currentStateWorldModel;
             RandomGenerator = new System.Random();
@@ -70,7 +70,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
         public void ResolveAction()
         {
-            if (currentStateWorldModel != null) return;
+            if (currentStateWorldModel == null || lastStateWorldModel == null) return;
             WorldModel WmNew = new WorldModel(currentStateWorldModel.Actions);
             WmNew.SetAllProperties(currentStateWorldModel.GameManager);
 
@@ -86,6 +86,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
             float newQ = (1 - learningRate) * Q + learningRate * (reward + (discountRate * MaxQ));
 
             Q_Table.UpdateOrAdd(lastStateWorldModel, lastAction, newQ, currentStateWorldModel);
+
+            lastStateWorldModel = null;
         }
 
         public float CalculateReward(WorldModel state)

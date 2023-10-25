@@ -89,7 +89,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
             try
             {
                 Action A = obj as Action;
-                if(A.ID  == this.ID) return true;
+                if(A.Name.Equals(this.Name)) return true;
                 return false;
             }
             catch
