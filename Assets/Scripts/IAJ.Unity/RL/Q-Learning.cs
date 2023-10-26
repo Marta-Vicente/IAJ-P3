@@ -22,11 +22,13 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
         public WorldModel lastStateWorldModel;
         protected System.Random RandomGenerator { get; set; }
 
+        public bool Doing = false;
+
         public Q_Learning(CurrentStateWorldModel currentStateWorldModel)
         {
             learningRate = 0.5f;
             discountRate = 0.9f;
-            randomnessRate = 0.0f;
+            randomnessRate = 0.1f;
             lenghOfWalk = 0;
             this.currentStateWorldModel = currentStateWorldModel;
             RandomGenerator = new System.Random();
@@ -47,14 +49,14 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
         public Action ChooseAction()
         {
-
+            Doing = true;
             Action[] currentActions = currentStateWorldModel.GetExecutableActions();
             Action action = null;
 
             WorldModel wm = new WorldModel(currentStateWorldModel.Actions);
             wm.SetAllProperties(currentStateWorldModel.GameManager);
 
-            if(RandomGenerator.Next(100)/100 < randomnessRate)
+            if((float)RandomGenerator.Next(100)/100 < randomnessRate)
             {
                 action = currentActions[RandomGenerator.Next(currentActions.Length)];
             }
@@ -88,6 +90,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
             Q_Table.UpdateOrAdd(lastStateWorldModel, lastAction, newQ, currentStateWorldModel);
 
             lastStateWorldModel = null;
+            Doing = false;
         }
 
         public float CalculateReward(WorldModel state)
