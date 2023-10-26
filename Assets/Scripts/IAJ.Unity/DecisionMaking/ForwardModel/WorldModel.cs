@@ -337,14 +337,10 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
         {
             int lvl = (int)this.GetProperty(Game.Properties.LEVEL);
 
-            if (lvl == 0)
+            if (lvl == 1)
                 return 0;
-            else if (lvl == 1)
-                return 1;
-            else if (lvl == 2)
-                return 2;
             else
-                return 3;
+                return 1;
         }
 
         public int EvaluateTime()
@@ -391,74 +387,32 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
                 return 5;
         }
 
-        public bool ComparePositions(Vector3 p2)
-        {
-            Vector3 p1 = (Vector3)this.GetProperty(Game.Properties.POSITION);
-
-            return Vector3.Distance(p1, p2) < 15f;
-
-        }
-
         public int EvaluatePosition()
         {
             Vector3 pos = (Vector3)this.GetProperty(Game.Properties.POSITION);
 
-            if (pos.x < 20 && pos.y < 20)
+            if (pos.x < 33 && pos.y < 33)
                 return 0;
-            else if (20 <= pos.x && pos.x < 40 && pos.y < 20)
+            else if (33 <= pos.x && pos.x < 66 && pos.y < 33)
                 return 1;
-            else if (40 <= pos.x && pos.x < 60 && pos.y < 20)
+            else if (66 <= pos.x && pos.y < 33)
                 return 2;
-            else if (60 <= pos.x && pos.x < 80 && pos.y < 20)
+
+            else if (pos.x < 33 && 33 <= pos.y && pos.y < 66)
                 return 3;
-            else if (80 <= pos.x && pos.y < 20)
+            else if (33 <= pos.x && pos.x < 66 && 33 <= pos.y && pos.y < 66)
                 return 4;
-
-            else if (pos.x < 20 && 20 <= pos.y && pos.y < 40)
+            else if (66 <= pos.x && 33 <= pos.y && pos.y < 66)
                 return 5;
-            else if (20 <= pos.x && pos.x < 40 && 20 <= pos.y && pos.y < 40)
+
+            else if (pos.x < 33 && 66 <= pos.y)
                 return 6;
-            else if (40 <= pos.x && pos.x < 60 && 20 <= pos.y && pos.y < 40)
+            else if (33 <= pos.x && pos.x < 66 && 66 <= pos.y)
                 return 7;
-            else if (60 <= pos.x && pos.x < 80 && 20 <= pos.y && pos.y < 40)
+            else if (66 <= pos.x && 66 <= pos.y)
                 return 8;
-            else if (80 <= pos.x && 20 <= pos.y && pos.y < 40)
-                return 9;
-
-            else if (pos.x < 20 && 40 <= pos.y && pos.y < 60)
-                return 10;
-            else if (20 <= pos.x && pos.x < 40 && 40 <= pos.y && pos.y < 60)
-                return 11;
-            else if (40 <= pos.x && pos.x < 60 && 40 <= pos.y && pos.y < 60)
-                return 12;
-            else if (60 <= pos.x && pos.x < 80 && 40 <= pos.y && pos.y < 60)
-                return 13;
-            else if (80 <= pos.x && 40 <= pos.y && pos.y < 60)
-                return 14;
-
-            else if (pos.x < 20 && 60 <= pos.y && pos.y < 80)
-                return 15;
-            else if (20 <= pos.x && pos.x < 40 && 60 <= pos.y && pos.y < 80)
-                return 16;
-            else if (40 <= pos.x && pos.x < 60 && 60 <= pos.y && pos.y < 80)
-                return 17;
-            else if (60 <= pos.x && pos.x < 80 && 60 <= pos.y && pos.y < 80)
-                return 18;
-            else if (80 <= pos.x && 60 <= pos.y && pos.y < 80)
-                return 19;
-
-            else if (pos.x < 20 && 80 < pos.y)
-                return 20;
-            else if (20 <= pos.x && pos.x < 40 && 80 < pos.y)
-                return 21;
-            else if (40 <= pos.x && pos.x < 60 && 80 < pos.y)
-                return 22;
-            else if (60 <= pos.x && pos.x < 80 && 80 < pos.y)
-                return 23;
-            else if (80 <= pos.x && 80 < pos.y)
-                return 24;
             else
-                return 25;
+                return 9;
 
         }
 
