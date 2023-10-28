@@ -8,6 +8,9 @@ using Assets.Scripts.IAJ.Unity.Formations;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.BehaviourTrees;
 using static UnityEngine.GraphicsBuffer;
 using UnityEngine.SceneManagement;
+using Assets.Scripts.IAJ.Unity.DecisionMaking.RL;
+using System.IO;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -76,8 +79,18 @@ public class GameManager : MonoBehaviour
 
     public static List<bool> Wins = new List<bool>();
 
+    [Header("Using existing trained table")]
+    public bool UsingExternalQTable = false;
+
     void Awake()
     {
+
+        if (UsingExternalQTable)
+        {
+            string path = Path.Combine(Application.dataPath, "Test1.json");
+            UploadTable(path);
+        }
+
         StartGame();
 
 
@@ -184,6 +197,53 @@ public class GameManager : MonoBehaviour
         }
 
         WinsText.text = "Win Rate: " + GetCurrentScore();
+
+        Character.BestActionText.text = "";
+
+        if (Wins.Count > 50)
+        {
+            int startIndex = Wins.Count - 50;
+            int lastWinCount = 0;
+            for (int i = startIndex; i < Wins.Count; i++)
+            {
+                if (Wins[i])
+                {
+                    lastWinCount++;
+                }
+            }
+
+            Character.BestActionText.text += "Last 50 games winrate: " + ((float)lastWinCount / 50) * 100 + "%\n";
+        }
+
+        if (Wins.Count > 20)
+        {
+            int startIndex = Wins.Count - 20;
+            int lastWinCount = 0;
+            for (int i = startIndex; i < Wins.Count; i++)
+            {
+                if (Wins[i])
+                {
+                    lastWinCount++;
+                }
+            }
+
+            Character.BestActionText.text += "Last 20 games winrate: " + ((float) lastWinCount / 20) * 100 + "%\n";
+        }
+
+        if (Wins.Count > 10)
+        {
+            int startIndex = Wins.Count - 10;
+            int lastWinCount = 0;
+            for (int i = startIndex; i < Wins.Count; i++)
+            {
+                if (Wins[i])
+                {
+                    lastWinCount++;
+                }
+            }
+
+            Character.BestActionText.text += "Last 10 games winrate: " + ((float)lastWinCount / 10) * 100 + "%";
+        }
     }
 
     public void UpdateDisposableObjects()
@@ -651,5 +711,22 @@ public class GameManager : MonoBehaviour
 
         return winCount.ToString() + "/" + Wins.Count;
     }
+
+
+    public void SaveQTable()
+    {
+        string path = Path.Combine(Application.dataPath, "QTable" + "_" + DateTime.Now.ToString("dd/MM/yyyy") + "_" + ".json");
+        path = Path.Combine(Application.dataPath, "Test1.json");
+        Q_Table.SaveQTableToFile(Q_Table_Instance.Table, path);
+        Debug.Log("Saved with sucess in " + path);
+    }
+
+    public void UploadTable(string path)
+    {
+        Q_Table.LoadQTableFromFile(path);
+        Debug.Log("Loaded with sucess from " + path);
+    }
+
+
 
 }

@@ -2,13 +2,18 @@
 using Assets.Scripts.IAJ.Unity.DecisionMaking.GOB;
 using UnityEngine;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
+using System;
+using Newtonsoft.Json;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions
 {
+    [Serializable]
     public abstract class WalkToTargetAndExecuteAction : Action
     {
+        [JsonIgnore]
         protected AutonomousCharacter Character { get; set; }
 
+        [JsonIgnore]
         public GameObject Target { get; set; }
 
         protected WalkToTargetAndExecuteAction(string actionName, AutonomousCharacter character, GameObject target) : base(actionName + "(" + target.name + ")")

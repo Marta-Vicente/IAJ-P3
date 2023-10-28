@@ -2,9 +2,11 @@
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 using Assets.Scripts.Game;
 using UnityEngine;
+using System;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions
 {
+    [Serializable]
     public class LevelUp : Action
     {
         public AutonomousCharacter Character { get; private set; }

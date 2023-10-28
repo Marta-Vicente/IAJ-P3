@@ -1,11 +1,15 @@
 ﻿using Assets.Scripts.Game;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
+using Newtonsoft.Json;
+using System;
 using UnityEngine;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions
 {
+    [Serializable]
     public class Rest : Action
     {
+        [JsonIgnore]
         protected AutonomousCharacter Character { get; set; }
 
         public Rest(AutonomousCharacter character) : base("Rest")

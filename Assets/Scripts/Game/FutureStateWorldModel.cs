@@ -3,14 +3,26 @@ using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
+using System;
+using Newtonsoft.Json;
+using Action = Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.Action;
+using Assets.Scripts.Game;
 
 namespace Assets.Scripts.Game
 {
+    [Serializable]
     public class FutureStateWorldModel : WorldModel
     {
+        [JsonIgnore]
         public GameManager GameManager { get; set; }
+
+        [JsonIgnore]
         protected int NextPlayer { get; set; }
+
+        [JsonIgnore]
         protected Action NextEnemyAction { get; set; }
+
+        [JsonIgnore]
         protected Action[] NextEnemyActions { get; set; }
 
         public FutureStateWorldModel(GameManager gameManager, List<Action> actions) : base(actions)
@@ -31,9 +43,9 @@ namespace Assets.Scripts.Game
 
         public override bool IsTerminal()
         {
-            int HP = (int)this.GetProperty(Properties.HP);
-            float time = (float)this.GetProperty(Properties.TIME);
-            int money = (int)this.GetProperty(Properties.MONEY);
+            int HP = (int)this.GetProperty(Game.Properties.HP);
+            float time = (float)this.GetProperty(Game.Properties.TIME);
+            int money = (int)this.GetProperty(Game.Properties.MONEY);
 
             /*
             if (money == 25) {
@@ -47,9 +59,9 @@ namespace Assets.Scripts.Game
 
         public override float GetScore()
         {
-            int money = (int)this.GetProperty(Properties.MONEY);
-            int HP = (int)this.GetProperty(Properties.HP);
-            float time = (float)this.GetProperty(Properties.TIME);
+            int money = (int)this.GetProperty(Game.Properties.MONEY);
+            int HP = (int)this.GetProperty(Game.Properties.HP);
+            float time = (float)this.GetProperty(Game.Properties.TIME);
 
             // TODO : Should Time and other factors be taken into accoun?
 
@@ -68,7 +80,7 @@ namespace Assets.Scripts.Game
 
         public override void CalculateNextPlayer()
         {
-            Vector3 position = (Vector3)this.GetProperty(Properties.POSITION);
+            Vector3 position = (Vector3)this.GetProperty(Game.Properties.POSITION);
             bool enemyEnabled;
 
             //basically if the character is close enough to an enemy, the next player will be the enemy.

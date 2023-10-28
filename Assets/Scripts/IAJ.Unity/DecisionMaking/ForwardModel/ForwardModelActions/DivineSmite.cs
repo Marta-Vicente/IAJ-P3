@@ -1,11 +1,13 @@
 ﻿using Assets.Scripts.Game;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 using Assets.Scripts.IAJ.Unity.Utils;
+using Newtonsoft.Json;
 using System;
 using UnityEngine;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions
 {
+    [Serializable]
     public class DivineSmite : WalkToTargetAndExecuteAction
     {
         private float expectedHPChange;
@@ -14,6 +16,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         private int enemyAC;
         private int enemySimpleDamage;
         //how do you like lambda's in c#?
+        [JsonIgnore]
         private Func<int> dmgRoll;
 
         public DivineSmite(AutonomousCharacter character, GameObject target) : base("DivineSmite",character,target)

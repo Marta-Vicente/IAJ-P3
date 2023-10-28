@@ -7,98 +7,93 @@ using UnityEngine;
 using Action = Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.Action;
 using UnityEditor.Experimental.GraphView;
 using System.Linq;
+using Assets.Scripts.IAJ.Unity.DecisionMaking.RL;
 
-namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
+public class Q_Learning
 {
-    public class Q_Learning
+    public float learningRate;
+    public float discountRate;
+    public float randomnessRate;
+    public float lenghOfWalk;
+    public List<Action> allActions;
+    public CurrentStateWorldModel currentStateWorldModel;
+
+    public Action lastAction;
+    public WorldModel lastStateWorldModel;
+    protected System.Random RandomGenerator { get; set; }
+
+    public bool Doing = false;
+
+    public Q_Learning(CurrentStateWorldModel currentStateWorldModel, List<Action> allActions)
     {
-        public float learningRate;
-        public float discountRate;
-        public float randomnessRate;
-        public float lenghOfWalk;
-        public CurrentStateWorldModel currentStateWorldModel;
+        learningRate = 0.5f;
+        discountRate = 0.9f;
+        randomnessRate = 0.01f;
+        lenghOfWalk = 0;
+        this.currentStateWorldModel = currentStateWorldModel;
+        RandomGenerator = new System.Random();
+        this.allActions = allActions;
+    }
 
-        public Action lastAction;
-        public WorldModel lastStateWorldModel;
-        protected System.Random RandomGenerator { get; set; }
+    public Action ChooseAction()
+    {
+        Doing = true;
+        Action[] currentActions = currentStateWorldModel.GetExecutableActions();
+        Action action = null;
 
-        public bool Doing = false;
+        WorldModel wm = new WorldModel(currentStateWorldModel.Actions);
+        wm.SetAllProperties(currentStateWorldModel.GameManager);
 
-        public Q_Learning(CurrentStateWorldModel currentStateWorldModel)
+        if((float)RandomGenerator.Next(100)/100 < randomnessRate)
         {
-            learningRate = 0.5f;
-            discountRate = 0.9f;
-            randomnessRate = 0.1f;
-            lenghOfWalk = 0;
-            this.currentStateWorldModel = currentStateWorldModel;
-            RandomGenerator = new System.Random();
+            action = currentActions[RandomGenerator.Next(currentActions.Length)];
+        }
+        else
+        {
+            action = Q_Table_Instance.Table.GetBest(wm, currentActions);
         }
 
-        /*
-        public Q_Learning(Q_Table table, CurrentStateWorldModel currentStateWorldModel)
+        lastAction = action;
+        lastStateWorldModel = wm;
+
+        foreach(var a in allActions)
         {
-            qTable = table;
-            learningRate = 0.0f;
-            discountRate = 0.0f;
-            randomnessRate = 0.0f;
-            lenghOfWalk = 0.0f;
-            this.currentStateWorldModel = currentStateWorldModel;
-            RandomGenerator = new System.Random();
-        }
-        */
-
-        public Action ChooseAction()
-        {
-            Doing = true;
-            Action[] currentActions = currentStateWorldModel.GetExecutableActions();
-            Action action = null;
-
-            WorldModel wm = new WorldModel(currentStateWorldModel.Actions);
-            wm.SetAllProperties(currentStateWorldModel.GameManager);
-
-            if((float)RandomGenerator.Next(100)/100 < randomnessRate)
-            {
-                action = currentActions[RandomGenerator.Next(currentActions.Length)];
-            }
-            else
-            {
-                action = Q_Table.GetBest(wm, currentActions);
-            }
-
-            lastAction = action;
-            lastStateWorldModel = wm;
-            return action;
+            if (a.Equals(lastAction)) return a;
         }
 
-        public void ResolveAction()
-        {
-            if (currentStateWorldModel == null || lastStateWorldModel == null) return;
-            WorldModel WmNew = new WorldModel(currentStateWorldModel.Actions);
-            WmNew.SetAllProperties(currentStateWorldModel.GameManager);
+        return null;
+    }
 
-            Action bestAction = Q_Table.GetBest(WmNew, currentStateWorldModel.GetExecutableActions());
+    public void ResolveAction()
+    {
+        if (currentStateWorldModel == null || lastStateWorldModel == null) return;
+        WorldModel WmNew = new WorldModel(currentStateWorldModel.Actions);
+        WmNew.SetAllProperties(currentStateWorldModel.GameManager);
 
-            Tuple<float, WorldModel> regist = Q_Table.FindOrAdd(lastStateWorldModel, lastAction);
-            Tuple<float, WorldModel> newRegist = Q_Table.FindOrAdd(WmNew, bestAction);
+        Action bestAction = Q_Table_Instance.Table.GetBest(WmNew, currentStateWorldModel.GetExecutableActions());
 
-            float Q = regist.Item1;
-            float MaxQ = newRegist.Item1;
-            float reward = CalculateReward(currentStateWorldModel);
+        Tuple<float, WorldModel> regist = Q_Table_Instance.Table.FindOrAdd(lastStateWorldModel, lastAction);
+        Tuple<float, WorldModel> newRegist = Q_Table_Instance.Table.FindOrAdd(WmNew, bestAction);
 
-            float newQ = (1 - learningRate) * Q + learningRate * (reward + (discountRate * MaxQ));
+        float Q = regist.Item1;
+        float MaxQ = newRegist.Item1;
+        float reward = CalculateReward(currentStateWorldModel);
 
-            Q_Table.UpdateOrAdd(lastStateWorldModel, lastAction, newQ, currentStateWorldModel);
+        float newQ = (1 - learningRate) * Q + learningRate * (reward + (discountRate * MaxQ));
 
-            lastStateWorldModel = null;
-            Doing = false;
-        }
+        Q_Table_Instance.Table.UpdateOrAdd(lastStateWorldModel, lastAction, newQ, currentStateWorldModel);
 
-        public float CalculateReward(WorldModel state)
-        {
-            if (!state.IsTerminal()) 
-                return 0f;
-            else
-                return state.GetScore();
-        }
+        lastStateWorldModel = null;
+        Doing = false;
+    }
+
+    public float CalculateReward(WorldModel state)
+    {
+        if (!state.IsTerminal()) 
+            return 0f;
+        else
+            return state.GetScore();
     }
 }
+
+

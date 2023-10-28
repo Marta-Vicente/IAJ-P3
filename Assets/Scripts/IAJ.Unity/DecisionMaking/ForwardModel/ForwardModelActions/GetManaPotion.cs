@@ -1,9 +1,11 @@
 ﻿using Assets.Scripts.Game;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
+using System;
 using UnityEngine;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions
 {
+    [Serializable]
     public class GetManaPotion : WalkToTargetAndExecuteAction
     {
         public GetManaPotion(AutonomousCharacter character, GameObject target) : base("GetManaPotion",character,target)

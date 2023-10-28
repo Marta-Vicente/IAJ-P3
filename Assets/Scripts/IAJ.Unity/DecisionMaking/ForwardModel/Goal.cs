@@ -1,6 +1,10 @@
-﻿namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
+﻿using System;
+using System.Runtime.Serialization;
+
+namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 {
-    public class Goal
+    [Serializable]
+    public class Goal /*: ISerializable*/
     {
         public string Name { get; private set; }
         public float InsistenceValue { get; set; }
@@ -37,5 +41,24 @@
             if (goalValue <= 0) return 0.0f;
             return this.Weight*goalValue*goalValue;
         }
+
+        /*
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", Name, typeof(string));
+            info.AddValue("InsistenceValue", InsistenceValue, typeof(float));
+            info.AddValue("ChangeRate", ChangeRate, typeof(float));
+            info.AddValue("Weight", Weight, typeof(float));
+        }
+
+        protected Goal(SerializationInfo info, StreamingContext context)
+        {
+            Name = (string)info.GetValue("Name", typeof(string));
+            InsistenceValue = (float)info.GetValue("InsistenceValue", typeof(float));
+            ChangeRate = (float)info.GetValue("ChangeRate", typeof(float));
+            Weight = (float)info.GetValue("Weight", typeof(float));
+        }
+        */
+
     }
 }

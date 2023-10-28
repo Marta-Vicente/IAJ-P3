@@ -38,7 +38,7 @@ public class AutonomousCharacter : NPC
     private Text TotalProcessingTimeText;
     private Text BestDiscontentmentText;
     private Text ProcessedActionsText;
-    private Text BestActionText;
+    public Text BestActionText;
     private Text BestActionSequence;
     private Text DiaryText;
     public int MaxIterations = 0;
@@ -172,7 +172,7 @@ public class AutonomousCharacter : NPC
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Orc"))
         {
-           this.Actions.Add(new SwordAttack(this, enemy));
+            this.Actions.Add(new SwordAttack(this, enemy));
         }
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Dragon"))
@@ -235,7 +235,7 @@ public class AutonomousCharacter : NPC
             else if(this.QActive)
             {
                 var worldModel = new CurrentStateWorldModel(GameManager.Instance, this.Actions, this.Goals);
-                this.Q_Learning = new Q_Learning(worldModel);
+                this.Q_Learning = new Q_Learning(worldModel, this.Actions);
             }
         }
 

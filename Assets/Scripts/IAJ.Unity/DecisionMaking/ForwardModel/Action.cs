@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 {
-    public class Action
+    [Serializable]
+    public class Action /*: ISerializable*/
     {
         private static int ActionID = 0;
         public string Name { get; set; }
@@ -97,6 +100,24 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
                 return false;
             }
         }
+
+        /*
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", Name, typeof(string));
+            info.AddValue("ID", ID, typeof(int));
+            info.AddValue("GoalEffects", GoalEffects, typeof(Dictionary<Goal, float>));
+            info.AddValue("Duration", Duration, typeof(float));
+        }
+
+        protected Action(SerializationInfo info, StreamingContext context)
+        {
+            Name = (string)info.GetValue("Name", typeof(string));
+            ID = (int)info.GetValue("ID", typeof(int));
+            GoalEffects = (Dictionary<Goal, float>)info.GetValue("GoalEffects", typeof(Dictionary<Goal, float>));
+            Duration = (float)info.GetValue("Duration", typeof(float));
+        }
+        */
 
     }
 }

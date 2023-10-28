@@ -5,17 +5,26 @@ using Assets.Scripts.IAJ.Unity.Utils;
 using static UnityEngine.GraphicsBuffer;
 using Assets.Scripts.Game;
 using System;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 {
-    public class WorldModel
+    [Serializable]
+    public class WorldModel /*:ISerializable*/
     {
-        private Dictionary<string, object> Properties { get; set; }
+        public Dictionary<string, object> Properties { get; set; }
+
+        [JsonIgnore]
         public List<Action> Actions { get; set; }
-        protected IEnumerator<Action> ActionEnumerator { get; set; } 
 
-        private Dictionary<string, float> GoalValues { get; set; } 
+        [JsonIgnore]
+        protected IEnumerator<Action> ActionEnumerator { get; set; }
 
+        [JsonIgnore]
+        private Dictionary<string, float> GoalValues { get; set; }
+
+        [JsonIgnore]
         public WorldModel Parent { get; set; }
 
         public int nextIndex = 0;
@@ -440,5 +449,21 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
                 return false;
             }
         }
+
+        /*
+        protected WorldModel(SerializationInfo info, StreamingContext context)
+        {
+            Properties = (Dictionary<string, object>)info.GetValue("Properties", typeof(Dictionary<string, object>));
+            Actions = (List<Action>)info.GetValue("Actions", typeof(List<Action>));
+            nextIndex = (int)info.GetValue("nextIndex", typeof(int));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Properties", Properties, typeof(Dictionary<string, object>));
+            info.AddValue("Actions", Actions, typeof(List<Action>));
+            info.AddValue("nextIndex", nextIndex, typeof(int));
+        }
+        */
     }
 }
