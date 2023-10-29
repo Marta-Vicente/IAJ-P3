@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
     public bool UsingExternalQTableMedium = false;
     public bool UsingExternalQTableHard = false;
 
-    private bool UsedExternalQTable = false;
+    private static bool UsedExternalQTable = false;
 
     void Awake()
     {
@@ -120,6 +120,7 @@ public class GameManager : MonoBehaviour
 
         StartGame();
 
+        if(UsedExternalQTable) Character.Q_Learning.randomnessRate = 0;
 
         //To use line make orc 3,4 using formation = true, 5 is anchor, get rid of nav mach to 1000y
         /*if (UseFormationLine)
