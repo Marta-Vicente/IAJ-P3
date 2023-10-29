@@ -80,15 +80,42 @@ public class GameManager : MonoBehaviour
     public static List<bool> Wins = new List<bool>();
 
     [Header("Using existing trained table")]
-    public bool UsingExternalQTable = false;
+    public bool UsingExternalQTableTest = false;
+    public bool UsingExternalQTableEasy = false;
+    public bool UsingExternalQTableMedium = false;
+    public bool UsingExternalQTableHard = false;
+
+    private bool UsedExternalQTable = false;
 
     void Awake()
     {
 
-        if (UsingExternalQTable)
+        if (UsingExternalQTableTest && !UsedExternalQTable)
         {
             string path = Path.Combine(Application.dataPath, "Test1.json");
             UploadTable(path);
+            UsedExternalQTable = true;
+        }
+
+        if (UsingExternalQTableEasy && !UsedExternalQTable)
+        {
+            string path = Path.Combine(Application.dataPath, "Easy.json");
+            UploadTable(path);
+            UsedExternalQTable = true;
+        }
+
+        if (UsingExternalQTableMedium && !UsedExternalQTable)
+        {
+            string path = Path.Combine(Application.dataPath, "Medium.json");
+            UploadTable(path);
+            UsedExternalQTable = true;
+        }
+
+        if (UsingExternalQTableHard && !UsedExternalQTable)
+        {
+            string path = Path.Combine(Application.dataPath, "Hard.json");
+            UploadTable(path);
+            UsedExternalQTable = true;
         }
 
         StartGame();

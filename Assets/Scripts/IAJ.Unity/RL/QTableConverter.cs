@@ -12,5 +12,5 @@ public class QTableDTO
 public class QTableEntry
 {
     public Dictionary<string, object> Key { get; set; }
-    public Dictionary<string, Tuple<float, WorldModel>> Value { get; set; }
+    public Dictionary<string, Tuple<float, float>> Value { get; set; }
 }

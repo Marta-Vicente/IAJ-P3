@@ -18,13 +18,13 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
     public class Q_Table
     {
 
-        public static Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, WorldModel>>> Table
-            = new Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, WorldModel>>>(new Q_Dictionary_Equals());
+        public static Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, float>>> Table
+            = new Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, float>>>(new Q_Dictionary_Equals());
 
 
         public Q_Table() { }
 
-        public Tuple<float, WorldModel> FindOrAdd(WorldModel State, Action Action)
+        public Tuple<float, float> FindOrAdd(WorldModel State, Action Action)
         {
             var copy = GetQTablePropertiesCopy(State.Properties);
             if (State == null || Action == null) return null;
@@ -33,17 +33,17 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
                 if (Table[copy].ContainsKey(Action.Name)) return Table[copy][Action.Name];
                 else
                 {
-                    Table[copy].Add(Action.Name, new Tuple<float, WorldModel>(0f, null));
+                    Table[copy].Add(Action.Name, new Tuple<float, float>(0f, 0f));
                     return Table[copy][Action.Name];
                 }
             }
             else
             {
-                Table.Add(copy, new Dictionary<string, Tuple<float, WorldModel>>());
+                Table.Add(copy, new Dictionary<string, Tuple<float, float>>());
                 if (Table[copy].ContainsKey(Action.Name)) return Table[copy][Action.Name];
                 else
                 {
-                    Table[copy].Add(Action.Name, new Tuple<float, WorldModel>(0f, null));
+                    Table[copy].Add(Action.Name, new Tuple<float, float>(0f, 0f));
                     return Table[copy][Action.Name];
                 }
             }
@@ -56,16 +56,16 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
             if (Table.ContainsKey(copy))
             {
                 if (Table[copy].ContainsKey(Action.Name))
-                    Table[copy][Action.Name] = new Tuple<float, WorldModel>(Q, newState);
+                    Table[copy][Action.Name] = new Tuple<float, float>(Q, 0f);
                 else
                 {
-                    Table[copy].Add(Action.Name, new Tuple<float, WorldModel>(Q, newState));
+                    Table[copy].Add(Action.Name, new Tuple<float, float>(Q, 0f));
                 }
             }
             else
             {
-                Table.Add(copy, new Dictionary<string, Tuple<float, WorldModel>>());
-                Table[copy].Add(Action.Name, new Tuple<float, WorldModel>(Q, newState));
+                Table.Add(copy, new Dictionary<string, Tuple<float, float>>());
+                Table[copy].Add(Action.Name, new Tuple<float, float>(Q, 0f));
             }
         }
 
@@ -78,7 +78,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
             foreach (var action in actions)
             {
-                Tuple<float, WorldModel> t = FindOrAdd(State, action);
+                Tuple<float, float> t = FindOrAdd(State, action);
                 if (t.Item1 >= bestQ)
                 {
                     bestQ = t.Item1;
@@ -144,7 +144,12 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
         public static void LoadQTableFromFile(string filePath)
         {
-
+            string json1 = System.IO.File.ReadAllText(filePath);
+            //qTable = new Q_Table();
+            //Q_Table.Table = JsonConvert.DeserializeObject<Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, WorldModel>>>>(json);
+            //Q_Table.Table = JsonUtility.FromJson<Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>>>(json);
+            QTableDTO newTable1 = JsonConvert.DeserializeObject<QTableDTO>(json1);
+            Table = FromDTO(newTable1);
             try
             {
                 if (System.IO.File.Exists(filePath))
@@ -153,8 +158,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
                     //qTable = new Q_Table();
                     //Q_Table.Table = JsonConvert.DeserializeObject<Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, WorldModel>>>>(json);
                     //Q_Table.Table = JsonUtility.FromJson<Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>>>(json);
-                    QTableDTO qTableDTO = JsonConvert.DeserializeObject<QTableDTO>(json);
-                    Table = FromDTO(qTableDTO);
+                    QTableDTO newTable = JsonConvert.DeserializeObject<QTableDTO>(json);
+                    Table = FromDTO(newTable);
 
                 }
             }
@@ -182,14 +187,40 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
             return new QTableDTO { Entries = entries };
         }
-        public static Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, WorldModel>>> FromDTO(QTableDTO qTableDTO)
+        public static Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, float>>> FromDTO(QTableDTO qTableDTO)
         {
-            Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, WorldModel>>> NewTable
-                = new Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, WorldModel>>>(new Q_Dictionary_Equals());
+            Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, float>>> NewTable
+                = new Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, float>>>(new Q_Dictionary_Equals());
 
+            
             foreach (var entry in qTableDTO.Entries)
             {
-                NewTable[entry.Key] = entry.Value;
+                int mana = Convert.ToInt32((object)entry.Key[Properties.MANA]);
+                int maxHP = Convert.ToInt32((object)entry.Key[Properties.MAXHP]);
+                int hp = Convert.ToInt32((object)entry.Key[Properties.HP]);
+                int shieldHP = Convert.ToInt32((object)entry.Key[Properties.ShieldHP]);
+                int money = Convert.ToInt32((object)entry.Key[Properties.MONEY]);
+                float time = Convert.ToSingle((object)entry.Key[Properties.TIME]);
+                int level = Convert.ToInt32((object)entry.Key[Properties.LEVEL]);
+                int maxmana = Convert.ToInt32((object)entry.Key[Properties.MAXMANA]);
+                string postition = Convert.ToString((object)entry.Key[Properties.POSITION]);
+                int xp = Convert.ToInt32((object)entry.Key[Properties.XP]);
+
+                Dictionary<string, object> subDictionary = new Dictionary<string, object>();
+                subDictionary.Add(Properties.MANA, mana);
+                subDictionary.Add(Properties.MAXHP, maxHP);
+                subDictionary.Add(Properties.HP, hp);
+                subDictionary.Add(Properties.ShieldHP, shieldHP);
+                subDictionary.Add(Properties.MONEY, money);
+                subDictionary.Add(Properties.TIME, time);
+                subDictionary.Add(Properties.LEVEL, level);
+                subDictionary.Add(Properties.MAXMANA, maxmana);
+                subDictionary.Add(Properties.POSITION, postition);
+                subDictionary.Add(Properties.XP, xp);
+
+
+                Dictionary<string, Tuple<float, float>> value = new Dictionary<string, Tuple<float, float>>(entry.Value);
+                NewTable.Add(subDictionary, value);
             }
 
             return NewTable;

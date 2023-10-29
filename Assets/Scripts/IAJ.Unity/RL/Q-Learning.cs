@@ -72,8 +72,8 @@ public class Q_Learning
 
         Action bestAction = Q_Table_Instance.Table.GetBest(WmNew, currentStateWorldModel.GetExecutableActions());
 
-        Tuple<float, WorldModel> regist = Q_Table_Instance.Table.FindOrAdd(lastStateWorldModel, lastAction);
-        Tuple<float, WorldModel> newRegist = Q_Table_Instance.Table.FindOrAdd(WmNew, bestAction);
+        Tuple<float, float> regist = Q_Table_Instance.Table.FindOrAdd(lastStateWorldModel, lastAction);
+        Tuple<float, float> newRegist = Q_Table_Instance.Table.FindOrAdd(WmNew, bestAction);
 
         float Q = regist.Item1;
         float MaxQ = newRegist.Item1;
