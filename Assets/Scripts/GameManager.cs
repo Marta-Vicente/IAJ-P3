@@ -106,7 +106,8 @@ public class GameManager : MonoBehaviour
 
         if (UsingExternalQTableMedium && !UsedExternalQTable)
         {
-            string path = Path.Combine(Application.dataPath, "Medium.json");
+            //string path = Path.Combine(Application.dataPath, "Medium.json");
+            string path = Application.dataPath + "/Medium.json";
             UploadTable(path);
             UsedExternalQTable = true;
         }
