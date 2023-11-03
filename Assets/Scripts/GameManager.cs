@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         if (UsingExternalQTableTest && !UsedExternalQTable)
         {
             //string path = Path.Combine(Application.dataPath, "Test1.json");
-            string path = Application.dataPath + "/Test1.json";
+            string path = Application.dataPath + "/All mother of tests/Test1.json";
             UploadTable(path);
             UsedExternalQTable = true;
         }
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
         if (UsingExternalQTableEasy && !UsedExternalQTable)
         {
             //string path = Path.Combine(Application.dataPath, "EasyMarta.json");
-            string path = Application.dataPath + "/EasyMarta.json";
+            string path = Application.dataPath + "/All mother of tests/EasyMarta.json";
             UploadTable(path);
             UsedExternalQTable = true;
         }
@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
         if (UsingExternalQTableMedium && !UsedExternalQTable)
         {
             //string path = Path.Combine(Application.dataPath, "Medium.json");
-            string path = Application.dataPath + "/Medium.json";
+            string path = Application.dataPath + "/All mother of tests/MediumMarta.json";
             UploadTable(path);
             UsedExternalQTable = true;
         }
@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
         if (UsingExternalQTableHard && !UsedExternalQTable)
         {
             //string path = Path.Combine(Application.dataPath, "Hard.json");
-            string path = Application.dataPath + "/Hard.json";
+            string path = Application.dataPath + "/All mother of tests/Hard.json";
             UploadTable(path);
             UsedExternalQTable = true;
         }
