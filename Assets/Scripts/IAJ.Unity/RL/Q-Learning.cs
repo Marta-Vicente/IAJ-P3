@@ -28,7 +28,7 @@ public class Q_Learning
     {
         learningRate = 0.5f;
         discountRate = 0.9f;
-        randomnessRate = 0.00f;
+        randomnessRate = 0.01f;
         lenghOfWalk = 0;
         this.currentStateWorldModel = currentStateWorldModel;
         RandomGenerator = new System.Random();

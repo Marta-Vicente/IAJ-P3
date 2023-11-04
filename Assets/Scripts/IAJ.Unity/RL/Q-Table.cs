@@ -144,12 +144,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.RL
 
         public static void LoadQTableFromFile(string filePath)
         {
-            string json1 = System.IO.File.ReadAllText(filePath);
-            //qTable = new Q_Table();
-            //Q_Table.Table = JsonConvert.DeserializeObject<Dictionary<Dictionary<string, object>, Dictionary<string, Tuple<float, WorldModel>>>>(json);
-            //Q_Table.Table = JsonUtility.FromJson<Dictionary<WorldModel, Dictionary<Action, Tuple<float, WorldModel>>>>(json);
-            QTableDTO newTable1 = JsonConvert.DeserializeObject<QTableDTO>(json1);
-            Table = FromDTO(newTable1);
+           
             try
             {
                 if (System.IO.File.Exists(filePath))

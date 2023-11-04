@@ -83,7 +83,7 @@ public class Q_Dictionary_Equals : IEqualityComparer<Dictionary<string, object>>
         };
     }
 
-
+    
     public static int EvaluateHP(int HP)
     {
         if (HP <= 2)
@@ -203,7 +203,169 @@ public class Q_Dictionary_Equals : IEqualityComparer<Dictionary<string, object>>
             return 9;
 
     }
+    
 
+    /*
+    public static int EvaluateHP(int HP)
+    {
+        if (HP <= 2)
+            return 0;
+        else if (2 < HP && HP <= 6)
+            return 1;
+        else if (6 < HP && HP <= 9)
+            return 2;
+        else if (9 < HP && HP <= 12)
+            return 3;
+        else
+            return 3;
+    }
+
+    public static int EvaluateMana(int mana)
+    {
+
+        if (0 <= mana && mana <= 2)
+            return 0;
+        else if (2 < mana && mana <= 5)
+            return 1;
+        else if (5 < mana && mana <= 7)
+            return 2;
+        else
+            return 3;
+    }
+
+    public static int EvaluateShieldHP(int shieldHP)
+    {
+
+        if (0 <= shieldHP && shieldHP <= 2)
+            return 0;
+        else
+            return 1;
+    }
+
+    public static int EvaluateXP(int xp)
+    {
+        if (0 <= xp && xp <= 10)
+            return 0;
+        else if (10 < xp && xp <= 20)
+            return 1;
+        else if (20 < xp && xp <= 30)
+            return 2;
+        else if (30 < xp && xp <= 40)
+            return 3;
+        else
+            return 4;
+    }
+
+    public static int EvaluateLevel(int lvl)
+    {
+        if (lvl == 1)
+            return 0;
+        else
+            return 1;
+    }
+
+    public static int EvaluateTime(float time)
+    {
+        if (0 <= time && time <= 15)
+            return 0;
+        else if (15 < time && time <= 30)
+            return 1;
+        else if (30 < time && time <= 45)
+            return 2;
+        else if (45 < time && time <= 60)
+            return 3;
+        else if (60 < time && time <= 75)
+            return 4;
+        else if (75 < time && time <= 90)
+            return 5;
+        else if (90 < time && time <= 105)
+            return 6;
+        else if (105 < time && time <= 120)
+            return 7;
+        else if (120 < time && time <= 135)
+            return 8;
+        else
+            return 9;
+    }
+
+    public static int EvaluateMoney(int money)
+    {
+        if (money == 0)
+            return 0;
+        else if (money == 5)
+            return 1;
+        else if (money == 10)
+            return 2;
+        else if (money == 15)
+            return 3;
+        else if (money == 20)
+            return 4;
+        else
+            return 5;
+    }
+
+    public static int EvaluatePosition(string posStr)
+    {
+        UnityEngine.Vector3 pos = ParseVector3(posStr);
+        if (pos.x < 20 && pos.y < 20)
+            return 0;
+        else if (20 <= pos.x && pos.x < 40 && pos.y < 20)
+            return 1;
+        else if (40 <= pos.x && pos.x < 60 && pos.y < 20)
+            return 2;
+        else if (60 <= pos.x && pos.x < 80 && pos.y < 20)
+            return 3;
+        else if (80 <= pos.x && pos.x <= 100 && pos.y < 20)
+            return 4;
+
+        else if (pos.x < 20 && 20 <= pos.y && pos.y < 40)
+            return 5;
+        else if (20 <= pos.x && pos.x < 40 && 20 <= pos.y && pos.y < 40)
+            return 6;
+        else if (40 <= pos.x && pos.x < 60 && 20 <= pos.y && pos.y < 40)
+            return 7;
+        else if (60 <= pos.x && pos.x < 80 && 20 <= pos.y && pos.y < 40)
+            return 8;
+        else if (80 <= pos.x && pos.x <= 100 && 20 <= pos.y && pos.y < 40)
+            return 9;
+
+        else if (pos.x < 20 && 40 <= pos.y && pos.y < 60)
+            return 10;
+        else if (20 <= pos.x && pos.x < 40 && 40 <= pos.y && pos.y < 60)
+            return 11;
+        else if (40 <= pos.x && pos.x < 60 && 40 <= pos.y && pos.y < 60)
+            return 12;
+        else if (60 <= pos.x && pos.x < 80 && 40 <= pos.y && pos.y < 60)
+            return 13;
+        else if (80 <= pos.x && pos.x <= 100 && 40 <= pos.y && pos.y < 60)
+            return 14;
+
+        else if (pos.x < 20 && 60 <= pos.y && pos.y < 80)
+            return 15;
+        else if (20 <= pos.x && pos.x < 40 && 60 <= pos.y && pos.y < 80)
+            return 16;
+        else if (40 <= pos.x && pos.x < 60 && 60 <= pos.y && pos.y < 80)
+            return 17;
+        else if (60 <= pos.x && pos.x < 80 && 60 <= pos.y && pos.y < 80)
+            return 18;
+        else if (80 <= pos.x && pos.x <= 100 && 60 <= pos.y && pos.y < 80)
+            return 19;
+
+        else if (pos.x < 20 && 80 <= pos.y && pos.y <= 100)
+            return 20;
+        else if (20 <= pos.x && pos.x < 40 && 80 <= pos.y && pos.y <= 100)
+            return 21;
+        else if (40 <= pos.x && pos.x < 60 && 80 <= pos.y && pos.y <= 100)
+            return 22;
+        else if (60 <= pos.x && pos.x < 80 && 80 <= pos.y && pos.y <= 100)
+            return 23;
+        else if (80 <= pos.x && pos.x <= 100 && 80 <= pos.y && pos.y <= 100)
+            return 24;
+        else
+            return 25; // If the position is outside the 5x5 grid.
+
+    }
+    */
 
     public static UnityEngine.Vector3 ParseVector3(string vectorString)
     {
